@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeeSeva DQMS - Telangana State Portal</title>
+  <style>
+    :root {
+      --primary: #003366;
+      --secondary: #0066cc;
+      --accent: #28a745;
+      --bg: #f4f7f9;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --muted: #666666;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 40px; }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    h2 { margin-bottom: 1rem; color: var(--primary); font-size: 1.25rem; border-bottom: 2px solid var(--bg); padding-bottom: 0.5rem; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+    select, input { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+
+    .btn {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .btn:hover { background-color: #004999; }
+    .btn-danger { background-color: #dc3545; margin-top: 0.5rem; }
+    .btn-danger:hover { background-color: #bd2130; }
+
+    .status-display { text-align: center; background: #eef5fc; border-left: 5px solid var(--secondary); }
+    .token-number { font-size: 3rem; font-weight: bold; color: var(--primary); margin: 0.5rem 0; }
+    .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; margin-top: 1rem; }
+    .status-box { background: white; padding: 1rem; border-radius: 6px; border: 1px solid #e0e0e0; }
+    .status-box .value { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+    .status-box .label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; }
+
+    .location-badge {
+      background: #e7f3ff;
+      border: 1px solid #b6d4fe;
+      color: #084298;
+      padding: 0.85rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      font-size: 0.92rem;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>MeeSeva Digital Queue Management System</h1>
+    <span>Telangana State (33 Districts)</span>
+  </header>
+
+  <div class="container">
+
+    <!-- Step 1: Issue Token / Booking Form -->
+    <div id="booking-section" class="card">
+      <h2>Get Virtual Queue Ticket</h2>
+      <form id="queue-form">
+        
+        <div class="grid">
+          <div class="form-group">
+            <label for="district">District</label>
+            <select id="district" required onchange="onDistrictChange()">
+              <option value="">-- Select District (33 Available) --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="main-service">Department / Service Category</label>
+            <select id="main-service" required disabled onchange="onMainServiceChange()">
+              <option value="">-- Select District First --</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="form-group">
+            <label for="sub-service">Sub Service / Certificate</label>
+            <select id="sub-service" required disabled>
+              <option value="">-- Select Service First --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="location">MeeSeva / Govt Office Location</label>
+            <select id="location" required disabled>
+              <option value="">-- Select Service First --</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mobile">Mobile Number (for SMS token updates)</label>
+          <input type="tel" id="mobile" placeholder="e.g. 9876543210" required pattern="[0-9]{10}">
+        </div>
+
+        <button type="submit" class="btn">Generate Virtual Ticket</button>
+      </form>
+    </div>
+
+    <!-- Step 2: Live Tracking Dashboard -->
+    <div id="ticket-section" class="card status-display hidden">
+      <h2>Your Active Queue Ticket</h2>
+      <p>Department: <strong id="ticket-service-name">-</strong></p>
+      <p style="font-size: 0.9rem; color: var(--muted);" id="ticket-subservice-name">-</p>
+      
+      <div class="token-number" id="citizen-token">---</div>
+      <p>Status: <span id="queue-status" style="color: var(--accent); font-weight: bold;">In Queue</span></p>
+
+      <div class="status-grid">
+        <div class="status-box">
+          <div class="label">Now Serving</div>
+          <div class="value" id="current-serving">---</div>
+        </div>
+        <div class="status-box">
+          <div class="label">Ahead of You</div>
+          <div class="value" id="people-ahead">0</div>
+        </div>
+        <div class="status-box">
+          <div class="label">Est. Wait Time</div>
+          <div class="value" id="wait-time">0 mins</div>
+        </div>
+      </div>
+
+      <div class="location-badge">
+        📍 <strong>Location / Office:</strong> <span id="ticket-location-name">-</span><br>
+        🏠 <strong>Address:</strong> <span id="ticket-location-addr">-</span><br>
+        🏢 <strong>Assigned Counter:</strong> <span id="counter-num">---</span>
+      </div>
+
+      <button class="btn btn-danger" onclick="cancelTicket()">Cancel Ticket</button>
+    </div>
+
+  </div>
+
+  <script>
+    // Complete List of All 33 Districts in Telangana
+    const telanganaDistricts = [
+      { id: "ADB", name: "Adilabad" },
+      { id: "BDK", name: "Bhadradri Kothagudem" },
+      { id: "HNK", name: "Hanamkonda" },
+      { id: "HYD", name: "Hyderabad" },
+      { id: "JGT", name: "Jagtial" },
+      { id: "JNG", name: "Jangaon" },
+      { id: "JBP", name: "Jayashankar Bhupalpally" },
+      { id: "JGD", name: "Jogulamba Gadwal" },
+      { id: "KMR", name: "Kamareddy" },
+      { id: "KRN", name: "Karimnagar" },
+      { id: "KHM", name: "Khammam" },
+      { id: "KBA", name: "Kumuram Bheem Asifabad" },
+      { id: "MBD", name: "Mahabubabad" },
+      { id: "MBN", name: "Mahabubnagar" },
+      { id: "MNC", name: "Mancherial" },
+      { id: "MDK", name: "Medak" },
+      { id: "MCM", name: "Medchal-Malkajgiri" },
+      { id: "MLG", name: "Mulugu" },
+      { id: "NGK", name: "Nagarkurnool" },
+      { id: "NLG", name: "Nalgonda" },
+      { id: "NRP", name: "Narayanpet" },
+      { id: "NRM", name: "Nirmal" },
+      { id: "NZB", name: "Nizamabad" },
+      { id: "PED", name: "Peddapalli" },
+      { id: "RJS", name: "Rajanna Sircilla" },
+      { id: "RNG", name: "Ranga Reddy" },
+      { id: "SNG", name: "Sangareddy" },
+      { id: "SDP", name: "Siddipet" },
+      { id: "SRP", name: "Suryapet" },
+      { id: "VKR", name: "Vikarabad" },
+      { id: "WNP", name: "Wanaparthy" },
+      { id: "WGL", name: "Warangal" },
+      { id: "YDB", name: "Yadadri Bhuvanagiri" }
+    ];
+
+    // Master Service Catalog for MeeSeva / Telangana Govt Offices
+    const masterServices = {
+      'REV': {
+        name: 'Revenue Department Services', prefix: 'REV-', counter: 'Counter 01 & 02', avgTime: 4,
+        subServices: ['Income Certificate', 'Caste / Community Certificate', 'Residence / Nativity Certificate', 'Legal Heir Certificate', 'Encumbrance Certificate (EC)', 'Adangal / Pahani Copies', 'OBCC Certificate'],
+        getLocation: (distName) => [
+          { name: `MeeSeva Center - Main Rd, ${distName}`, addr: `Main Road, Near Collectorate Circle, ${distName}` },
+          { name: `Tahsildar / MRO Office - ${distName} Urban`, addr: `Revenue Divisional Office Complex, ${distName}` },
+          { name: `MeeSeva Center - Market Yard, ${distName}`, addr: `Opposite Rythu Bazar, Station Road, ${distName}` }
+        ]
+      },
+      'REG': {
+        name: 'Civil Registration & Municipal Services', prefix: 'CR-', counter: 'Counter 03', avgTime: 3,
+        subServices: ['Birth Certificate Issue / Correction', 'Death Certificate Issue', 'Child Name Inclusion', 'Property Tax Payment', 'Trade License Renewal', 'Water Connection Approval'],
+        getLocation: (distName) => [
+          { name: `MeeSeva Center - Municipal Complex, ${distName}`, addr: `Municipal Corporation Office Premises, ${distName}` },
+          { name: `MeeSeva Center - Bus Stand Colony, ${distName}`, addr: `Near RTC Bus Stand Main Entrance, ${distName}` }
+        ]
+      },
+      'RTA': {
+        name: 'Transport Department (RTA Services)', prefix: 'RTA-', counter: 'Counter 04 & 05', avgTime: 6,
+        subServices: ['LLR Slot Booking', 'Driving License Renewal', 'Vehicle Ownership Transfer (Duplicate RC)', 'Fitness Certificate Request', 'Address Change in DL/RC'],
+        getLocation: (distName) => [
+          { name: `District RTO Office - ${distName}`, addr: `RTO Testing Track Complex, NH Highway Side, ${distName}` },
+          { name: `MeeSeva Center - RTO Junction, ${distName}`, addr: `Shop 4, Opp RTO Main Office Gate, ${distName}` }
+        ]
+      },
+      'CIVIL': {
+        name: 'Civil Supplies & Ration Services', prefix: 'CS-', counter: 'Counter 06', avgTime: 5,
+        subServices: ['New Food Security Card (Ration Card)', 'Member Addition / Deletion in Ration Card', 'Address Modification in Ration Card'],
+        getLocation: (distName) => [
+          { name: `MeeSeva Center - Civil Supplies Hub, ${distName}`, addr: `Civil Supplies Bhavan, Old Collectorate Rd, ${distName}` },
+          { name: `MeeSeva Center - Civil Line, ${distName}`, addr: `Near District Supply Office, ${distName}` }
+        ]
+      },
+      'ELEC': {
+        name: 'Electricity & Utility Services (TSPDCL/TSNPDCL)', prefix: 'ELE-', counter: 'Counter 07', avgTime: 2,
+        subServices: ['Electricity Bill Payment', 'New Service Connection Registration', 'Category Transfer / Name Change'],
+        getLocation: (distName) => [
+          { name: `MeeSeva Center - Electricity Substation Rd, ${distName}`, addr: `Opposite DISCOM Circle Office, ${distName}` }
+        ]
+      }
+    };
+
+    // Specific Real Map Overrides for Key Urban Centers
+    const mapOverrides = {
+      'HYD': {
+        'REV': [
+          { name: 'MeeSeva Center - Sanath Nagar', addr: 'H No 7-1-304/2/A/1, Subhash Nagar, Sanath Nagar, Hyderabad - 500018' },
+          { name: 'MeeSeva Center - SR Nagar', addr: 'Beside HMWS & SB, Prakash Nagar, Sanjeeva Reddy Nagar, Hyderabad - 500038' },
+          { name: 'MeeSeva Center - Yousufguda', addr: 'Shop No. 1, Near Hanuman Temple, Jawahar Nagar, Yousufguda, Hyderabad - 500045' },
+          { name: 'MRO / Tahsildar Office - Khairatabad', addr: 'Opp. Eenadu Office, Somajiguda, Khairatabad, Hyderabad - 500082' }
+        ],
+        'REG': [
+          { name: 'MeeSeva Center - Borabanda', addr: 'MCH Community Hall Complex, Moti Nagar Main Rd, Borabanda, Hyderabad - 500018' },
+          { name: 'GHMC Head Office - Tank Bund', addr: 'CC Complex, Tank Bund Road, Lower Tank Bund, Hyderabad - 500063' }
+        ]
+      },
+      'HNK': {
+        'REV': [
+          { name: 'MeeSeva Center - Main Road Hanamkonda', addr: 'Main Road, Near Canara Bank, Hanamkonda - 506001' },
+          { name: 'MeeSeva Center - Kazipet', addr: 'Near Railway Gate, Fathima Nagar, Kazipet - 506004' }
+        ]
+      },
+      'NZB': {
+        'REV': [
+          { name: 'MeeSeva Center - Pragathi Nagar', addr: 'Shop No 1, Opp. Prashanthi Homes, Srinagar Colony, Nizamabad - 503001' },
+          { name: 'MeeSeva Center - Kanteshwar', addr: 'Shop No 3, Opp. Gouda Sangam, Armoor Road, Kanteshwar, Nizamabad - 503002' }
+        ]
+      }
+    };
+
+    let selectedServiceObj = null;
+    let selectedLocationObj = null;
+    let myTokenNum = 0;
+    let timer = null;
+
+    // Populate Districts Dropdown on Page Load
+    window.onload = function() {
+      const distSelect = document.getElementById('district');
+      telanganaDistricts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = `${d.name} District`;
+        distSelect.appendChild(opt);
+      });
+    };
+
+    function onDistrictChange() {
+      const distId = document.getElementById('district').value;
+      const mainSelect = document.getElementById('main-service');
+      const subSelect = document.getElementById('sub-service');
+      const locSelect = document.getElementById('location');
+
+      mainSelect.innerHTML = '<option value="">-- Select Main Service Category --</option>';
+      subSelect.innerHTML = '<option value="">-- Select Service First --</option>';
+      locSelect.innerHTML = '<option value="">-- Select Service First --</option>';
+
+      subSelect.disabled = true;
+      locSelect.disabled = true;
+
+      if (!distId) {
+        mainSelect.disabled = true;
+        return;
+      }
+
+      mainSelect.disabled = false;
+      for (let key in masterServices) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = masterServices[key].name;
+        mainSelect.appendChild(option);
+      }
+    }
+
+    function onMainServiceChange() {
+      const distId = document.getElementById('district').value;
+      const distObj = telanganaDistricts.find(d => d.id === distId);
+      const mainKey = document.getElementById('main-service').value;
+      const subSelect = document.getElementById('sub-service');
+      const locSelect = document.getElementById('location');
+
+      subSelect.innerHTML = '';
+      locSelect.innerHTML = '';
+
+      if (!mainKey || !masterServices[mainKey]) {
+        subSelect.disabled = true;
+        locSelect.disabled = true;
+        return;
+      }
+
+      selectedServiceObj = masterServices[mainKey];
+
+      // Populate Sub-Services
+      subSelect.disabled = false;
+      selectedServiceObj.subServices.forEach(sub => {
+        const option = document.createElement('option');
+        option.value = sub;
+        option.textContent = sub;
+        subSelect.appendChild(option);
+      });
+
+      // Populate Locations (using Map Overrides if available, or generate district locations)
+      locSelect.disabled = false;
+      let locations = [];
+      if (mapOverrides[distId] && mapOverrides[distId][mainKey]) {
+        locations = mapOverrides[distId][mainKey];
+      } else {
+        locations = selectedServiceObj.getLocation(distObj.name);
+      }
+
+      selectedServiceObj.activeLocations = locations;
+
+      locations.forEach((loc, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = loc.name;
+        locSelect.appendChild(option);
+      });
+    }
+
+    document.getElementById('queue-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const subVal = document.getElementById('sub-service').value;
+      const locIndex = document.getElementById('location').value;
+      
+      selectedLocationObj = selectedServiceObj.activeLocations[locIndex];
+
+      const baseCurrent = Math.floor(Math.random() * 40) + 10;
+      myTokenNum = baseCurrent + 3; // 3 people ahead
+      const fullToken = selectedServiceObj.prefix + myTokenNum;
+
+      document.getElementById('ticket-service-name').innerText = selectedServiceObj.name;
+      document.getElementById('ticket-subservice-name').innerText = 'Sub-Service: ' + subVal;
+      document.getElementById('ticket-location-name').innerText = selectedLocationObj.name;
+      document.getElementById('ticket-location-addr').innerText = selectedLocationObj.addr;
+      document.getElementById('citizen-token').innerText = fullToken;
+      document.getElementById('counter-num').innerText = selectedServiceObj.counter;
+
+      document.getElementById('booking-section').classList.add('hidden');
+      document.getElementById('ticket-section').classList.remove('hidden');
+
+      selectedServiceObj.current = baseCurrent;
+      updateLiveView();
+      timer = setInterval(simulateQueueProgress, 4000);
+    });
+
+    function updateLiveView() {
+      const ahead = myTokenNum - selectedServiceObj.current;
+      document.getElementById('current-serving').innerText = selectedServiceObj.prefix + selectedServiceObj.current;
+      document.getElementById('people-ahead').innerText = ahead > 0 ? ahead : 0;
+
+      if (ahead > 0) {
+        document.getElementById('wait-time').innerText = '~' + (ahead * selectedServiceObj.avgTime) + ' mins';
+        document.getElementById('queue-status').innerText = 'In Queue';
+        document.getElementById('queue-status').style.color = '#0066cc';
+      } else {
+        document.getElementById('wait-time').innerText = 'Now!';
+        document.getElementById('queue-status').innerText = 'Please proceed to your counter!';
+        document.getElementById('queue-status').style.color = '#28a745';
+        clearInterval(timer);
+      }
+    }
+
+    function simulateQueueProgress() {
+      if (selectedServiceObj.current < myTokenNum) {
+        selectedServiceObj.current++;
+        updateLiveView();
+      }
+    }
+
+    function cancelTicket() {
+      clearInterval(timer);
+      document.getElementById('ticket-section').classList.add('hidden');
+      document.getElementById('booking-section').classList.remove('hidden');
+      document.getElementById('queue-form').reset();
+      document.getElementById('main-service').disabled = true;
+      document.getElementById('sub-service').disabled = true;
+      document.getElementById('location').disabled = true;
+    }
+  </script>
+</body>
+</html>

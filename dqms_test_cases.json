@@ -1,0 +1,483 @@
+[
+  {
+    "id": "DQMS_001",
+    "desc": "Test citizen login via 10-digit mobile number and 6-digit OTP",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Mobile = 9876543210, OTP = 123456",
+    "scenario": "Verify citizen receives SMS OTP and successful verification returns JWT session token",
+    "steps": [
+      [
+        "1",
+        "Navigate to MeeSeva DQMS login screen",
+        "Login screen opens with Citizen tab active",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Enter 10-digit mobile number and click Get OTP",
+        "6-digit OTP generated and dispatched via SMS",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Enter 123456 in OTP field and click Verify",
+        "Authentication succeeds, session token saved",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Check redirection to Citizen Service Hub",
+        "Citizen Portal opens with service selection form",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_002",
+    "desc": "Test citizen dashboard real-time statistics and queue metrics",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Total Waiting = 18, Est Wait Time = 12m",
+    "scenario": "Verify dashboard aggregates and displays active tickets, estimated wait times, and open counters",
+    "steps": [
+      [
+        "1",
+        "Navigate to Citizen Dashboard from main menu",
+        "Dashboard loads within 2 seconds",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Verify active ticket and wait time cards",
+        "Active tickets (18) and wait time (12 min) render",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Verify recent bookings activity feed",
+        "Most recent citizen tokens listed with timestamps",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_003",
+    "desc": "Test cascading selection across 33 districts and 5 major departments",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "District = Hyderabad, Dept = Revenue, Service = Income Cert",
+    "scenario": "Verify selecting a district dynamically loads corresponding offices and departments",
+    "steps": [
+      [
+        "1",
+        "Open District selection dropdown",
+        "All 33 Telangana districts are selectable",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Select 'Hyderabad' district",
+        "Offices located in Hyderabad populate in dropdown",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Select 'Revenue' department",
+        "Revenue department services (Income, Caste, RoR) populate",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_004",
+    "desc": "Test atomic sequence allocation for virtual queue token",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Dept = Revenue, Sequence = rev_seq",
+    "scenario": "Verify booking generates unique alphanumeric token ID using database sequence without collision",
+    "steps": [
+      [
+        "1",
+        "Select service 'Income Certificate' and date",
+        "Slot availability confirmed",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Click 'Confirm & Reserve Queue Token'",
+        "Database executes NEXTVAL on rev_seq",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Verify generated token number format",
+        "Token format strictly matches prefix (e.g., REV-005)",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_005",
+    "desc": "Test digital queue receipt and optical barcode pass rendering",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Token = REV-005, Format = Code-128",
+    "scenario": "Verify digital pass contains citizen details, token number, QR/barcode, and print button",
+    "steps": [
+      [
+        "1",
+        "Open issued digital queue ticket pass",
+        "Holographic digital ticket modal opens",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Inspect Code-128 barcode rendering",
+        "Optical barcode SVG displays clearly with token text",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Click 'Download / Print Pass'",
+        "Receipt downloads as printable PDF pass",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_006",
+    "desc": "Test government official login with *.gov.in email and role resolution",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Email = officer.rev@telangana.gov.in, OTP = 123456",
+    "scenario": "Verify officer login resolves jurisdiction and counter assignment strictly server-side",
+    "steps": [
+      [
+        "1",
+        "Select Authorized Official tab on login gateway",
+        "Official login card renders",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Enter official email and request OTP",
+        "Official account recognized in Oracle DB",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Enter OTP and click Access Command Center",
+        "Authentication succeeds",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Verify desk counter assignment in header",
+        "Header displays 'Counter 01 | REV | Hyderabad'",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_007",
+    "desc": "Test counter operator atomically summoning lowest waiting ticket",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Action = Call Next, Counter = 01",
+    "scenario": "Verify operator clicking 'Call Next' atomically claims the next waiting ticket in FIFO order",
+    "steps": [
+      [
+        "1",
+        "Operator opens Command Center desk view",
+        "Active waiting list shows tickets REV-005, REV-006",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Operator clicks 'Call Next Token'",
+        "Lowest waiting ticket (REV-005) assigned to Counter 01",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Verify ticket status change in database",
+        "Ticket status changes from WAITING to CALLED in DB",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_008",
+    "desc": "Test Server-Sent Events push broadcasting and procedural chime",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Protocol = SSE (HTTP/2), Audio = Web Audio API",
+    "scenario": "Verify calling a ticket pushes real-time event to citizen screens and plays 3-tone chime",
+    "steps": [
+      [
+        "1",
+        "Citizen views active digital ticket screen",
+        "SSE connection established on /api/queue/stream",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Operator calls ticket REV-005",
+        "SSE broadcast event TICKET_CALLED received in <200ms",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Verify audio chime execution",
+        "Procedural Web Audio API chime plays audibly",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Verify UI visual indicator",
+        "Screen displays prominent banner 'Proceed to Counter 01'",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_009",
+    "desc": "Test ticket progression from CALLED to SERVING to COMPLETED",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Token = REV-005, Operator = Counter 01",
+    "scenario": "Verify operator starting service records start time, and completing service records end time",
+    "steps": [
+      [
+        "1",
+        "Operator clicks 'Start Serving'",
+        "Ticket status transitions to SERVING in DB",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Operator processes citizen application",
+        "Active service timer counts duration",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Operator clicks 'Complete Service'",
+        "Ticket status transitions to COMPLETED",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Verify audit ledger entry",
+        "Transaction recorded with total service duration in audit log",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_010",
+    "desc": "Test placing citizen ticket on hold when documents are missing",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Token = REV-005, Reason = 'Missing Aadhaar Copy'",
+    "scenario": "Verify operator can place citizen on hold, proceed with next citizen, and recall held citizen",
+    "steps": [
+      [
+        "1",
+        "Operator clicks 'Put on Hold' on desk console",
+        "Modal requests hold reason",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Select 'Missing Supporting Documents' and submit",
+        "Ticket moves to HOLD status; counter becomes free",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Operator calls next citizen (REV-006)",
+        "REV-006 is called and served without blockage",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Citizen returns with documents; operator recalls",
+        "REV-005 reinstated to active serving at Counter 01",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_011",
+    "desc": "Test automatic no-show flagging after 3 audible calls without arrival",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Token = REV-005, Call Count = 3",
+    "scenario": "Verify ticket is marked as NO_SHOW if citizen fails to report after 3 calls",
+    "steps": [
+      [
+        "1",
+        "Operator calls ticket REV-005 (Call 1)",
+        "Chime plays; 60-second response timer starts",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Timer expires; operator clicks 'Call Again' (Call 2)",
+        "Chime plays; call count increments to 2",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Timer expires; operator clicks 'Call Again' (Call 3)",
+        "Final warning chime plays",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Citizen does not appear; operator clicks 'No-Show'",
+        "Ticket moves to NO_SHOW; counter becomes ready",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  },
+  {
+    "id": "DQMS_012",
+    "desc": "Test AI Sahayak chatbot providing civic service document checklists",
+    "created": "CSLM/DQMS QA Team",
+    "reviewed": "Mrs. K. Hari Priya",
+    "version": "1.0",
+    "tester": "Zain Ahmed, Manitheja",
+    "date": "28/10/2026",
+    "result": "Pass",
+    "prereq": "Access to Chrome Browser / MeeSeva DQMS live instance",
+    "test_data": "Query = 'What documents are needed for Income Certificate?'",
+    "scenario": "Verify AI Sahayak returns accurate document checklists and fee schedules in English and Telugu",
+    "steps": [
+      [
+        "1",
+        "Open AI Sahayak widget on Citizen Portal",
+        "AI assistant chat drawer opens",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "2",
+        "Type query 'Income Certificate requirements'",
+        "AI streams response within 1.5 seconds",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "3",
+        "Verify checklist contents",
+        "Lists Ration Card, Aadhaar, Salary Certificate, Rs. 45 fee",
+        "As Expected",
+        "Pass"
+      ],
+      [
+        "4",
+        "Click Telugu toggle",
+        "Checklist translates accurately to Telugu",
+        "As Expected",
+        "Pass"
+      ]
+    ]
+  }
+]

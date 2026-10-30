@@ -1,0 +1,74 @@
+[
+  {
+    "num": "1",
+    "req_id": "DQMS-01",
+    "desc": "Check Mobile OTP Authentication & JWT Issuance",
+    "test_cases": "1. Check system behavior when valid 10-digit Indian mobile is entered.\n2. Check rejection of alphanumeric or <10 digit input.\n3. Verify OTP dispatch via SMS gateway within 5 seconds.\n4. Verify entry of valid 6-digit OTP returns signed JWT bearer token.\n5. Verify invalid OTP returns 401 Unauthorized.\n6. Verify account lockout after 5 consecutive failed attempts."
+  },
+  {
+    "num": "2",
+    "req_id": "DQMS-02",
+    "desc": "Check District & Department Cascading Selection",
+    "test_cases": "1. Verify selecting 'Hyderabad' filters offices to Hyderabad district.\n2. Verify selecting 'Revenue' loads Revenue department services.\n3. Verify changing district clears previously selected department services.\n4. Verify estimated wait times update dynamically based on queue depth."
+  },
+  {
+    "num": "3",
+    "req_id": "DQMS-03",
+    "desc": "Check Virtual Token Sequence Allocation",
+    "test_cases": "1. Verify booking token atomically invokes NEXTVAL on department database sequence.\n2. Verify generated token ID adheres strictly to prefix format (REV-005).\n3. Verify database transaction rollback on concurrent network interruption.\n4. Verify prevention of duplicate active bookings for same citizen on same date."
+  },
+  {
+    "num": "4",
+    "req_id": "DQMS-04",
+    "desc": "Check Code-128 Barcode & Pass Generation",
+    "test_cases": "1. Verify generation of valid Code-128 barcode SVG matching token ID.\n2. Verify barcode readability with standard USB handheld optical scanner.\n3. Verify digital pass renders citizen name, token, department, and timestamp.\n4. Verify PDF receipt download generates valid vector document."
+  },
+  {
+    "num": "5",
+    "req_id": "DQMS-05",
+    "desc": "Check Real-Time SSE Stream & Audio Chime",
+    "test_cases": "1. Verify citizen browser establishes persistent SSE connection to /api/queue/stream.\n2. Verify operator 'Call Next' pushes TICKET_CALLED event within 200ms.\n3. Verify client execution of procedural 3-tone Web Audio API chime.\n4. Verify automatic graceful SSE reconnection upon transient network failure."
+  },
+  {
+    "num": "6",
+    "req_id": "DQMS-06",
+    "desc": "Check Official Authentication & Role Scoping",
+    "test_cases": "1. Verify official login with *.gov.in email and bcrypt-hashed password.\n2. Verify role-based access control restricts Counter Operators to assigned counter.\n3. Verify Supervisors can view all counters within their assigned district center.\n4. Verify non-authenticated requests to official endpoints return 403 Forbidden."
+  },
+  {
+    "num": "7",
+    "req_id": "DQMS-07",
+    "desc": "Check Counter Calling & Service Transition",
+    "test_cases": "1. Verify operator clicking 'Call Next' assigns lowest waiting ticket to counter.\n2. Verify ticket state transitions atomically from WAITING to CALLED in Oracle DB.\n3. Verify clicking 'Start Serving' records start timestamp and state SERVING.\n4. Verify clicking 'Complete' transitions state to COMPLETED and archives record."
+  },
+  {
+    "num": "8",
+    "req_id": "DQMS-08",
+    "desc": "Check Exception Handling (Hold & Recall)",
+    "test_cases": "1. Verify operator can place ticket on HOLD with specified reason.\n2. Verify ticket on HOLD does not block counter from calling next citizen.\n3. Verify operator can recall held ticket once citizen supplies required documents.\n4. Verify audit ledger logs hold duration and reason for traceability."
+  },
+  {
+    "num": "9",
+    "req_id": "DQMS-09",
+    "desc": "Check Automated No-Show Expiry Workflow",
+    "test_cases": "1. Verify operator can issue up to 3 audible chime calls to absent citizen.\n2. Verify ticket transitions to NO_SHOW upon 3rd call timeout.\n3. Verify NO_SHOW ticket cannot be recalled without supervisor override.\n4. Verify counter is automatically made ready for next citizen in queue."
+  },
+  {
+    "num": "10",
+    "req_id": "DQMS-10",
+    "desc": "Check Bilingual AI Sahayak Advisory",
+    "test_cases": "1. Verify AI Sahayak queries FreeLLMAPI with Telangana service rules context.\n2. Verify accurate retrieval of document checklist and statutory fees.\n3. Verify English-to-Telugu translation preserves technical terminology.\n4. Verify response latency remains under 2 seconds under concurrent queries."
+  },
+  {
+    "num": "11",
+    "req_id": "DQMS-11",
+    "desc": "Check Non-Functional Security & Performance",
+    "test_cases": "1. Verify all web traffic is enforced over HTTPS with TLS 1.3 encryption.\n2. Verify database connection pool (HikariCP) maintains 5,000 concurrent sessions.\n3. Verify sub-500ms response time for token allocation under stress load.\n4. Verify parameterized JPA queries prevent SQL injection across all endpoints."
+  },
+  {
+    "num": "12",
+    "req_id": "DQMS-12",
+    "desc": "Check End-to-End Civic Queue Lifecycle",
+    "test_cases": "1. Complete citizen OTP login, service selection, and token booking.\n2. Stream real-time queue position updates via SSE to citizen display.\n3. Operator summons token at Counter 01, verifies documents, and completes.\n4. Generate daily supervisory audit report and export summary to PDF."
+  }
+]
