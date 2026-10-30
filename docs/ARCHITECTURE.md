@@ -8,7 +8,7 @@
 The **MeeSeva Digital Queue Management System (DQMS)** is a mission-critical, enterprise-grade government technology platform engineered for the Government of Telangana. The platform modernizes citizen service delivery across all 33 Telangana districts by replacing physical, crowded queues with a virtual, transparent, and deterministic digital queue lifecycle.
 
 ### Core Transformation Mandate
-- **Source of Truth Transformation**: Transition from the standalone single-file HTML prototype (`prototype/meeseva-prototype.html`) into a robust full-stack production application.
+- **Source of Truth Transformation**: Transition from the standalone single-file HTML prototype (`docs/prototype/meeseva-prototype.html`) into a robust full-stack production application.
 - **Elimination of Fake/Simulated Logic**: Completely eliminate `Math.random()`, dummy math offsets, and client-side `setInterval()` queue ticks. Every ticket number, wait estimate, queue position, and counter assignment must be backed by a relational database state machine.
 - **Futuristic Government Tech Aesthetic**: Redesign the interface with an authoritative, modern digital experience featuring interactive Three.js / React Three Fiber 3D environments, adaptable light/dark themes, and accessible typography.
 - **Two Distinct Post-Login Worlds**:
@@ -20,7 +20,7 @@ The **MeeSeva Digital Queue Management System (DQMS)** is a mission-critical, en
 
 ## 2. Audit of Existing Prototype & Baseline Assets
 
-### 2.1 Reference Prototype Inspection (`prototype/meeseva-prototype.html`)
+### 2.1 Reference Prototype Inspection (`docs/prototype/meeseva-prototype.html`)
 The audited prototype provides the functional benchmark for business entities, district coverage, and service hierarchies:
 
 1. **Telangana District Coverage (All 33 Districts)**:

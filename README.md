@@ -26,6 +26,7 @@ The system features:
 
 ### 1. Frontend Web Application (React 19 + Vite + Three.js)
 ```bash
+cd frontend
 # Install dependencies
 npm install
 
@@ -42,11 +43,11 @@ npm run build
 Ensure Oracle Database 23ai / 26ai service is active:
 ```bash
 # Connect to your Oracle instance via SQL*Plus and execute the setup wrapper:
-sqlplus system/oracle@localhost:1521/FREE @backend/database/setup-oracle.sql
+sqlplus system/oracle@localhost:1521/FREE @src/main/resources/setup-oracle.sql
 ```
 This automatically runs:
-1. `backend/database/schema-oracle.sql`: DDL for all 12 tables, primary keys, foreign keys, and indexes.
-2. `backend/database/seed-oracle.sql`: Seeds all 33 Telangana districts, 5 departments (`REV`, `REG`, `RTA`, `CIVIL`, `ELEC`), services, offices, counters, official test accounts, and active tickets.
+1. `src/main/resources/schema-oracle.sql`: DDL for all 12 tables, primary keys, foreign keys, and indexes.
+2. `src/main/resources/seed-oracle.sql`: Seeds all 33 Telangana districts, 5 departments (`REV`, `REG`, `RTA`, `CIVIL`, `ELEC`), services, offices, counters, official test accounts, and active tickets.
 
 ### 3. Java Spring Boot Backend
 
@@ -57,7 +58,6 @@ $env:JWT_SECRET = 'replace-with-a-generated-secret'
 ```
 
 ```bash
-cd backend
 mvn spring-boot:run
 ```
 - Backend REST API starts on: `http://localhost:8081`
@@ -86,46 +86,31 @@ mvn spring-boot:run
 
 ## 📂 Project Structure
 ```
-calm-franklin/
-├── ARCHITECTURE.md                  # Comprehensive technical specification
-├── IMPLEMENTATION_STATUS.md         # Phased iteration execution ledger
-├── prototype/
-│   └── meeseva-prototype.html       # Audited baseline prototype
-├── backend/
-│   ├── database/
-│   │   ├── schema-oracle.sql        # Oracle 23ai DDL schema
-│   │   ├── seed-oracle.sql          # Telangana 33 districts & master seed data
-│   │   └── setup-oracle.sql         # SQL*Plus runner wrapper
-│   ├── pom.xml                      # Maven project configuration
-│   └── src/main/
-│       ├── java/gov/telangana/meeseva/dqms/
-│       │   ├── DqmsApplication.java
-│       │   ├── config/              # Spring Security & CORS
-│       │   ├── model/               # JPA Entities (3NF)
-│       │   ├── repository/          # Spring Data JPA Repositories
-│       │   ├── service/             # Queue Engine, Auth, AIService
-│       │   └── controller/          # REST & SSE Controllers
-│       └── resources/
-│           └── application.properties
-└── src/
-    ├── App.jsx                      # Root application & routing
-    ├── index.css                    # Futuristic Gov-Tech theme (Dark/Light)
-    ├── components/
-    │   ├── 3d/
-    │   │   ├── Telangana3DIntro.jsx # Cinematic 3D landing scene
-    │   │   └── TelanganaBackground3D.jsx # Persistent 3D canvas
-    │   └── MeeSevaAISahayak.jsx     # FreeLLMAPI intelligent assistant
-    ├── context/
-    │   ├── AuthContext.jsx          # Dual Citizen/Official authentication
-    │   └── QueueContext.jsx         # Deterministic queue sync & chime
-    ├── data/
-    │   └── masterData.js            # 33 Districts & 5 departments catalog
-    ├── services/
-    │   └── queueEngine.js           # Deterministic queue calculations & state machine
-    └── views/
-        ├── AuthView.jsx             # 3D unified authentication gateway
-        ├── CitizenPortalView.jsx    # Citizen holographic ticket & booking
-        └── OfficialPortalView.jsx   # Official command operations center
+MeeSeva-DQMS/
+├── database/
+│   └── supabase/schema.sql
+├── docs/
+│   ├── diagrams/
+│   ├── prototype/
+│   ├── reports/
+│   └── test-cases/
+├── frontend/
+│   ├── src/
+│   ├── test/
+│   ├── index.html
+│   └── package.json
+├── scripts/
+│   └── reports/
+├── src/main/
+│   ├── java/gov/telangana/meeseva/dqms/
+│   └── resources/
+│       ├── application.properties
+│       ├── schema-oracle.sql
+│       ├── seed-oracle.sql
+│       └── setup-oracle.sql
+├── .gitignore
+├── README.md
+└── pom.xml
 ```
 
 ---

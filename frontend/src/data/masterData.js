@@ -2,7 +2,7 @@
  * MeeSeva DQMS Master Catalog
  * Full catalog of 33 Telangana Districts, 5 Master Departments,
  * Sub-Services, Prefixes, Counters, and District Office Locations.
- * Directly derived and expanded from prototype/meeseva-prototype.html
+ * Directly derived and expanded from docs/prototype/meeseva-prototype.html
  */
 
 export const TELANGANA_DISTRICTS = [

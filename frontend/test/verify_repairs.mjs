@@ -22,10 +22,10 @@ function runTest(name, fn) {
 }
 
 // -----------------------------------------------------------------------------
-// Test 1: P0 — Database RLS Hardening (supabase/schema.sql)
+// Test 1: P0 — Database RLS Hardening (../database/supabase/schema.sql)
 // -----------------------------------------------------------------------------
 runTest('P0: Verify RLS policies have ZERO anonymous bypasses', () => {
-  const schemaSql = fs.readFileSync('supabase/schema.sql', 'utf8');
+  const schemaSql = fs.readFileSync('../database/supabase/schema.sql', 'utf8');
   
   // Must NOT contain auth.uid() IS NULL in any policy
   const anonBypassMatches = schemaSql.match(/auth\.uid\(\)\s+IS\s+NULL/gi);
